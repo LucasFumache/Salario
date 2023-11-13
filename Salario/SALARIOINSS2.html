@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste</title>
+</head>
+<style>
+    div{
+        background-color: rgb(170, 199, 203);
+        margin-top: 15%;
+        padding: 5%;
+        border-radius: 25px;
+        border-color: black;
+        margin-left: 25%;
+        font-family: century gothic;
+        width: 40%;  
+    }
+    body{
+        background-color:white;
+    }
+    h1{
+        margin-left: 25%;
+    }
+    button{
+    margin-top: 2rem;
+                position: relative;
+                width: 120px;
+                height: 50px;
+                font-size: 20px;
+                background-color: #000000;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                font-family: Forum;
+                text-align: center;
+                margin-left: 300px;
+    }
+    label{
+        margin-left: 10%;
+        font-size: 20px;
+       
+    }
+    input{
+        margin-left: 10%;
+        height: 25px;
+        border-radius: 10px;
+        width: 200px;
+    }
+    .int1{
+margin-left: 132px;
+margin-top: 8px;
+    }
+    .int2{
+margin-left: 156px;
+margin-top: 8px;
+    }
+    .int3{
+margin-left: 33px;
+margin-top: 8px;
+    }
+  
+</style>
+<body>
+    <div>
+       
+    <h1>CÁLCULADORA DE SALÁRIO LIQUIDO</h1>
+    
+    <label for="SalBruto"  > Salário Bruto: </label>
+    <input type="text" name="SalBruto" id="SalBruto" required placeholder="Coloque seu Salário"><br>
+    <label for="inss">INSS:</label>
+    <input type="text" name="inss" id="inss" class="int1" placeholder="Seu INSS vai aparecer aqui"><br>
+    <label for="ir">IR:</label>
+    <input type="text" name="ir" id="ir" class="int2" placeholder="Seu IR vai aparecer aqui"><br>
+    <label for="SalLiq">Salário Liquído:</label>
+    <input type="text" name="SalLiq" id="SalLiq" class="int3" placeholder="Seu salário líquido!"><br><br>
+    <button class="btn btn-primary" type="button" onclick="salLiq()">Calcular</button><br><br>
+</div>
+    <script>
+ 
+
+
+
+    // Calculo de IR 
+    // IR = Salario Base (SB) * %Desconto - Desconto padrao 
+    // SB = Salario Bruto - INSS 
+    // INSS - Salario Bruto * %Desconto 
+
+    //Tabela INSS 
+    //0 - 1320 0%
+    //1000.01 - 2571.29 5%
+    //2000.01 - 3845.94 10%
+    //6000.01 - 7507.49 15%
+    // Acima de 7507.49 20%
+
+    //Tabela IR 
+    // 0-2112 0%
+    // 1000.01 - 2826.65 7.5%  158.40 
+    // 2000.01 - 3845.94 15.0% 370.40
+    // 6000.01 - 4664.68 22.5% 651.73
+    // Acima de 4664.68 27.5% 884.96
+
+    //Salario bruto (SB)
+    // INSS = 7507.49 * 0.14 = 1051.05
+    // SB = 20000 - 1051.05 = 18948.95
+    // IR = 18945.95 * 0.275 - 884.96 = 4326.00
+
+
+    function inss(SalBruto) {
+       
+        var inss=0;
+        if(SalBruto > 0 && SalBruto <=1320.0){
+            percinss = 0.075;
+            descinss = 0.0;
+            
+        } 
+        if(SalBruto > 1320.00 && SalBruto <= 2571.29){
+        percinss = 0.09;
+        descinss = 19.80;
+
+        } if(SalBruto > 2571.29 && SalBruto <= 3845.94){
+        percinss = 0.12;
+        descinss = 96.94;
+
+        }
+        if(SalBruto > 3845.94&& SalBruto <= 7507.49){
+        percinss = 0.14;
+        descinss = 174.08;
+
+        }
+        if(SalBruto >  7507.49 ){
+        percinss = 0.14;
+        descinss = 174.08;
+
+        } 
+        inss = SalBruto*percinss - descinss;
+        
+        if (SalBruto>7507.49){
+            inss=1051.05;
+        }
+        
+       
+        return inss.toFixed(2);
+
+    } 
+    
+    function ir(SalBruto) {
+       var SalBase=0;
+       var vrinss=0.0;
+       vrinss = inss(SalBruto);
+       SalBase = SalBruto - vrinss; 
+       var ir=0;    
+       if(SalBase > 0 && SalBase  <=2112.00){
+           percir = 0.0;
+           descir= 0.0;
+           
+       } 
+       if(SalBase  > 2112.00 && SalBase  <= 2826.65){
+            percir = 0.075;
+            descir = 158.40;
+
+       } if(SalBase  > 2826.65 && SalBase <= 3751.06){
+            percir = 0.15;
+            descir = 370.40;
+
+       }
+       if(SalBase  > 3751.06 && SalBase  <=4664.68){
+            percir = 0.225;
+            descir = 651.73;
+
+       }
+       if(SalBase  > 4664.68 ){
+            percir = 0.275;
+            descir =884.96;
+
+       } 
+            ir= SalBase *percir - descir;
+       
+       return ir.toFixed(2);
+   } 
+  
+  function salLiq(){
+    var SalBruto=document.getElementById("SalBruto").value;
+    var vrinss=inss(SalBruto);
+    var vir=ir(SalBruto);
+    var SalLiq = SalBruto - vrinss - vir;
+    document.getElementById("inss").value = "R$" + vrinss;
+    document.getElementById("ir").value = "R$" + vir;
+    document.getElementById("SalLiq").value = "R$" + SalLiq;
+    return SalLiq.toFixed(2)
+  }
+
+
+
+    
+
+
+</script>
+
+</body>
+
+</html>
